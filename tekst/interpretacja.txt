@@ -1,0 +1,43 @@
+# Dokumentacja Problemu 2. (kodowanie melodii)
+
+## Polecenie 
+
+Musimy przetworzyć ciąg tekstu.
+- PRZED zapisem trzeba zamienić substringa "poli" na "boli".
+- Kompresujemy tekst, koniecznie bezstratnie oraz...
+- zapisujemy go w postaci zer i jedynek tak,
+aby dało się go przywrócić do pierwotnej postaci.
+
+## Rozwiązanie
+
+   Wpierw powinniśmy ustalić, czy pracujemy na alfabecie
+polskim, czy angielskim.
+   Załóżmy na razie, że na angielskim.
+W takim razie mamy 26 liter, które moglibyśmy zapisywać
+za pomocą pięcioznakowych stringów zer i jedynek, jak następuje:
+
+- a = 00000(0)
+- b = 00001(1)
+...
+- z = 11001(25)
+
+   Do tego powinniśmy doliczyć znaki specjalne.
+Do zapisu zawartości piosenki potrzebujemy co najmniej:
+
+- ',', ewentualnie ";" lub "\n", zależy od interpretacji; oznaczałby
+koniec wiersza/wersu.
+- ' ', czyli spację, znak biały dzielący słowa,
+
+określimy je symbolami:
+- 11010 = ' '
+- 11101 = ';'
+
+   Takie rozwiązanie pozostawia nam jeszcze 6 kombinacji
+stringów pięcioznakowych, które moglibyśmy wykorzystać do
+kompresji poprzez przypisanie
+im substringów, które występują w tekście kilkukrotnie, ale to trochę mało.
+   Gdy te 6 kombinacji się wyczerpie, możemy zacząć
+mapować stringi o większej ilości znaków, jednak wtedy musimy
+zastanowić się jak zapisać je w postaci skompresowanej.
+
+
