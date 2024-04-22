@@ -2,11 +2,15 @@ import random
 
 import matplotlib.pyplot as plt
 
+from world_generator import WorldGenerator
+
 height = 1000
 width = 1000
 
+
 def generate_random_point():
     return (random.uniform(0, width), random.uniform(0, height))
+
 
 def plot_random_points():
     points = [generate_random_point() for i in range(100)]
@@ -17,7 +21,12 @@ def plot_random_points():
 
 
 def main():
-    plot_random_points()
+    # plot_random_points()
+    world_generator = WorldGenerator(width=width, height=height)
+    land_points = world_generator.generate_land_points(number_of_points=100)
+    for land_point in land_points:
+        print(land_point)
+
 
 if __name__ == "__main__":
     main()
