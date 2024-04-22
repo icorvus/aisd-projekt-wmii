@@ -14,6 +14,8 @@ def swap_words(text):
         "poli" : "boli"
     }
 
+    text.translate(swap_candidates)
+
     # zamiana wystapien ze slownika
     for cos, costam in swap_candidates.items():
         text = text.replace(cos, costam)
@@ -21,8 +23,9 @@ def swap_words(text):
 
 with open("2.txt", "r") as file:
     text = file.read()
-    text = text.replace('\n', ' ')
-    text = swap_words(text)
+    text = swap_words(text.replace('\n', ' '))
+
+    print(text)
 
     for letter in text:
         print(letter + " --> " + convert(letter))
