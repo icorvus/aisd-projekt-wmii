@@ -1,31 +1,16 @@
-import random
-
-import matplotlib.pyplot as plt
-
-from world_generator import WorldGenerator
-
-height = 1000
-width = 1000
-
-
-def generate_random_point():
-    return (random.uniform(0, width), random.uniform(0, height))
-
-
-def plot_random_points():
-    points = [generate_random_point() for i in range(100)]
-    x = [point[0] for point in points]
-    y = [point[1] for point in points]
-    plt.scatter(x, y)
-    plt.show()
+from hull import ConvexHullSearcher
+from world import WorldGenerator, WorldVisualizer
 
 
 def main():
-    # plot_random_points()
+    width = 100
+    height = 100
+    number_of_points = 25
     world_generator = WorldGenerator(width=width, height=height)
-    land_points = world_generator.generate_land_points(number_of_points=100)
-    for land_point in land_points:
-        print(land_point)
+    world = world_generator.generate_world(number_of_points=number_of_points)
+    WorldVisualizer.plot_world(world)
+    world.fence_points = ConvexHullSearcher(world.land_points).find_convex_hull()
+    WorldVisualizer.plot_fence(world)
 
 
 if __name__ == "__main__":

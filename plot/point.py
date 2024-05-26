@@ -9,6 +9,7 @@ class BasePoint:
     def __str__(self) -> str:
         return f"{self.__class__.__name__}({self.x}, {self.y})"
 
+
 class LandPoint(BasePoint):
     pass
 
@@ -19,8 +20,6 @@ class HandPlacementEnum(StrEnum):
 
 
 class Porter(BasePoint):
-    def __init__(
-        self, x: float, y: float, hand_placement: HandPlacementEnum, *args, **kwargs
-    ):
-        super().__init__(x=x, y=y, *args, **kwargs)
+    def __init__(self, x: float, y: float, hand_placement: HandPlacementEnum):
+        super().__init__(x=x, y=y)
         self.hand_placement = hand_placement

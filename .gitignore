@@ -1,2 +1,10 @@
 .venv
 venv
+.vscode
+venv/*
+*.log
+__pycache__/
+*.py[cod]
+*.orig
+.coverage
+.coverage.*
