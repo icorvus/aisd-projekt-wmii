@@ -1,1 +1,6 @@
 matplotlib==3.8.4
+networkx==3.3
+
+# lint
+flake8==7.0.0
+black==24.4.0

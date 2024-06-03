@@ -23,3 +23,6 @@ class Porter(BasePoint):
     def __init__(self, x: float, y: float, hand_placement: HandPlacementEnum):
         super().__init__(x=x, y=y)
         self.hand_placement = hand_placement
+
+
+Porter(x=1, y=2, hand_placement=HandPlacementEnum.FRONT)
