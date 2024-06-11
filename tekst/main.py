@@ -5,17 +5,35 @@ filename = sys.argv[1]
 def swap_words(text):
     # co nalezy zmienic na co
     # jesli bedzie potrzeba zmienic cos jeszcze, dodajemy to tutaj
+<<<<<<< HEAD
     
     swap_candidates = {"poli": "boli"}
+=======
+    swap_candidates = {
+        "poli" : "boli"
+    }
+
+    text.translate(swap_candidates)
+
+    # zamiana wystapien ze slownika
+>>>>>>> 661e4120db46d524502c3bf37b0bab0791969caa
     for cos, costam in swap_candidates.items():
         text_fixed = text.replace(cos, costam)
     text_fixed = text_fixed.replace("\n", " ")
     return text_fixed
 
+<<<<<<< HEAD
 with open(filename) as f:
     print("Na podstawie pliku \"" + filename + "\":")
     string = f.read().strip()
     string_fixed = swap_words(string)
+=======
+with open("2.txt", "r") as file:
+    text = file.read()
+    text = swap_words(text.replace('\n', ' '))
+
+    print(text)
+>>>>>>> 661e4120db46d524502c3bf37b0bab0791969caa
 
 class NodeTree(object):
 
