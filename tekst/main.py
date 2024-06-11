@@ -1,39 +1,20 @@
+import json
 import sys
 
 filename = sys.argv[1]
 
 def swap_words(text):
-    # co nalezy zmienic na co
-    # jesli bedzie potrzeba zmienic cos jeszcze, dodajemy to tutaj
-<<<<<<< HEAD
-    
-    swap_candidates = {"poli": "boli"}
-=======
-    swap_candidates = {
-        "poli" : "boli"
-    }
-
-    text.translate(swap_candidates)
+    # to nie dziala, trzeba poprawic
+    swap_candidates = {"poli": "boli", "\n": " "}
 
     # zamiana wystapien ze slownika
->>>>>>> 661e4120db46d524502c3bf37b0bab0791969caa
     for cos, costam in swap_candidates.items():
         text_fixed = text.replace(cos, costam)
-    text_fixed = text_fixed.replace("\n", " ")
     return text_fixed
 
-<<<<<<< HEAD
 with open(filename) as f:
-    print("Na podstawie pliku \"" + filename + "\":")
     string = f.read().strip()
     string_fixed = swap_words(string)
-=======
-with open("2.txt", "r") as file:
-    text = file.read()
-    text = swap_words(text.replace('\n', ' '))
-
-    print(text)
->>>>>>> 661e4120db46d524502c3bf37b0bab0791969caa
 
 class NodeTree(object):
 
@@ -80,5 +61,28 @@ while len(nodes) > 1:
 
 huffman_code = huffman_tree(nodes[0][0])
 
-for char in string_fixed:
-    print(char + " ---> " + huffman_code[char])
+print("Na podstawie pliku \"" + filename + "\" (" + str(len(string_fixed)) + " znaków):")
+print(' Znak | Odpowiednik w sensie Huffmana ')
+print('-' * 38)
+for (char, frequency) in freq:
+    print(' %-4r |%20s' % (char, huffman_code[char]))
+
+print()
+out = ''.join(f"{huffman_code[char]}" for char in string_fixed)
+print()
+print(out)
+print()
+out_separated = ' '.join(f"{huffman_code[char]}" for char in string_fixed)
+print(out_separated)
+print()
+
+print("Koszta zapisu:")
+print('pięciobitowego | kodem zmiennej dł.')
+print('-' * 35)
+print('%-14r | %9s' % (len(string_fixed) * 5, len(out)))
+
+with open("output.txt", "w") as out:
+    out.write(out_separated)
+
+with open("huffman.json", "w") as json_out:
+    json.dump(huffman_code, json_out, indent = 2)
