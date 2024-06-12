@@ -32,7 +32,7 @@ class Graph:
                         return True
         return False
 
-    def edmonds_karp(self, source, sink):
+    def edmonds_karp_relations(self, source, sink):
         parent = [-1] * self.V
         max_flow = 0
 

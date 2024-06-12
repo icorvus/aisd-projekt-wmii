@@ -1,25 +1,11 @@
 import math
 from functools import cmp_to_key
-
 from point import BasePoint
-
 
 class GrahamScan:
     def find_convex_hull(self, points: list[BasePoint]) -> list[BasePoint]:
-        """
-        Find the convex hull of a set of points using the Graham Scan algorithm.
-
-        Args:
-            points (list[BasePoint]): A list of points.
-
-        Returns:
-            list[BasePoint]: The convex hull of the set of points.
-        """
-
         self.p0 = min(points, key=lambda point: (point.y, point.x))
-
         sorted_points = sorted(points, key=cmp_to_key(self._by_polar_angle))
-
         stack = []
 
         for point in sorted_points:
@@ -56,11 +42,4 @@ class ConvexHullSearcher:
         self.strategy = GrahamScan()
 
     def find_convex_hull(self) -> list[BasePoint]:
-        """
-        Find the convex hull of a set of points.
-
-        Returns:
-            list[BasePoint]: The convex hull of the set of points.
-        """
-
         return self.strategy.find_convex_hull(self.points)
