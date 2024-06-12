@@ -1,8 +1,7 @@
 from hull import ConvexHullSearcher
 from world import NetworkGenerator, NetworkVisualizer, WorldGenerator, WorldVisualizer
-
+from relations import build_graph, read_input, draw_graph
 from max_flow import MaxFlowFinder
-
 import random
 
 def main():
@@ -17,13 +16,15 @@ def main():
 
     network = NetworkGenerator(world).generate_network(25, 0.1, range(1, 10))
     NetworkVisualizer.plot_network(network)
-
     random_two_points = random.sample(world.land_points, 2)
-
     edges, max_flow = MaxFlowFinder(network).find_max_flow(random_two_points[0], random_two_points[1])
-
     print(len(edges), max_flow)
 
+    people, relations = read_input()
+    g, source, sink, front_ids, back_ids = build_graph(people, relations)
+    max_matching = g.edmonds_karp(source, sink)
+    print(f'Max association: {max_matching}')
+    draw_graph(people, relations, front_ids, back_ids)
 
 
 if __name__ == "__main__":
