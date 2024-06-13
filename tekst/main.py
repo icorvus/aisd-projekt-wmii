@@ -1,19 +1,35 @@
 import json
 import sys
+import argparse
+import string
 
-filename = sys.argv[1]
+parser = argparse.ArgumentParser(
+        prog = "Problem 2.",
+        description = "Rozwiązanie problemu 2. w języku Python"
+        )
+
+verbose = False
+
+parser.add_argument('-i', '--infile', help="file to read from").default = "infile.txt"
+parser.add_argument('-o', '--outfile', help="file to write to").default = "outfile.txt"
+parser.add_argument('-v', '--verbose', help="increase output verbosity", action="store_true")
+
+args = parser.parse_args()
+if args.verbose:
+    verbose = True
+
+filename = args.infile
 
 def swap_words(text):
     # to nie dziala, trzeba poprawic
     swap_candidates = {"poli": "boli", "\n": " "}
-
     # zamiana wystapien ze slownika
-    for cos, costam in swap_candidates.items():
-        text_fixed = text.replace(cos, costam)
+    for key in swap_candidates.keys():
+        text_fixed = text.strip().replace(key, swap_candidates[key])
     return text_fixed
 
 with open(filename) as f:
-    string = f.read().strip()
+    string = f.read()
     string_fixed = swap_words(string)
 
 class NodeTree(object):
@@ -68,6 +84,8 @@ for (char, frequency) in freq:
     print(' %-4r |%20s' % (char, huffman_code[char]))
 
 print()
+print(string)
+print()
 out = ''.join(f"{huffman_code[char]}" for char in string_fixed)
 print()
 print(out)
@@ -76,13 +94,16 @@ out_separated = ' '.join(f"{huffman_code[char]}" for char in string_fixed)
 print(out_separated)
 print()
 
-print("Koszta zapisu:")
+print("Koszta zapisów:")
 print('pięciobitowego | kodem zmiennej dł.')
 print('-' * 35)
 print('%-14r | %9s' % (len(string_fixed) * 5, len(out)))
 
-with open("output.txt", "w") as out:
+with open(args.outfile, "w") as out:
     out.write(out_separated)
 
 with open("huffman.json", "w") as json_out:
     json.dump(huffman_code, json_out, indent = 2)
+
+if __name__ == "__main__":
+    main()
