@@ -1,16 +1,17 @@
 import sys
 import numpy as np
-
 from point import LandPoint
 from relations import build_graph, draw_graph, read_input
-from world import WorldGenerator, WorldVisualizer, World
+from world import WorldVisualizer, World
 from hull import ConvexHullSearcher
 from max_flow import EdmondsKarp
-from utils import read_relations, read_points_and_matrix, create_random_matrix_for_flow, generate_points_and_matrix
+from utils import read_relations, read_points_and_matrix, generate_points_and_matrix
+
 
 def print_matrix(matrix: np.ndarray):
     for row in matrix:
         print(", ".join(f"{val:2d}" for val in row))
+
 
 def main():
     if len(sys.argv) == 3:
@@ -32,7 +33,7 @@ def main():
         people, relations = read_input()
 
     # Generate world and plot points
-    world = World(width=50, height=50, land_points=[LandPoint(x, y) for x, y in points])
+    world = World(width=100, height=100, land_points=[LandPoint(x, y) for x, y in points])
     WorldVisualizer.plot_world(world)
     world.fence_points = ConvexHullSearcher(world.land_points).find_convex_hull()
     WorldVisualizer.plot_fence(world)

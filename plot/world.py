@@ -2,6 +2,7 @@ import random
 import matplotlib.pyplot as plt
 from point import LandPoint, BasePoint
 
+
 class World:
     def __init__(
         self,
@@ -25,25 +26,6 @@ class World:
         points_inside_fence = set(self.land_points) - points_on_fence
 
         return len(points_on_fence), len(points_inside_fence)
-
-
-class WorldGenerator:
-    def __init__(self, width: float, height: float) -> None:
-        self.width = width
-        self.height = height
-
-    def generate_land_points(self, number_of_points: int) -> list[LandPoint]:
-        return [
-            LandPoint(x=random.uniform(0, self.width), y=random.uniform(0, self.height))
-            for _ in range(number_of_points)
-        ]
-
-    def generate_world(self, number_of_points: int) -> World:
-        return World(
-            width=self.width,
-            height=self.height,
-            land_points=self.generate_land_points(number_of_points=number_of_points),
-        )
 
 
 class WorldVisualizer:

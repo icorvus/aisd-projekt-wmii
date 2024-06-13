@@ -2,6 +2,7 @@ import math
 from functools import cmp_to_key
 from point import BasePoint
 
+
 class GrahamScan:
     def find_convex_hull(self, points: list[BasePoint]) -> list[BasePoint]:
         self.p0 = min(points, key=lambda point: (point.y, point.x))

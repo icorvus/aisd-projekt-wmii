@@ -2,6 +2,7 @@ from collections import defaultdict, deque
 import matplotlib.pyplot as plt
 import networkx as nx
 
+
 class Graph:
     def __init__(self, vertices):
         self.V = vertices

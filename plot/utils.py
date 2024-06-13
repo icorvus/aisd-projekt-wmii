@@ -1,12 +1,6 @@
 import numpy as np
 import random
 
-def create_random_matrix_for_flow(n: int) -> np.ndarray:
-    matrix = np.random.randint(1, 11, size=(n, n))
-    matrix = np.triu(matrix)  # zachowujemy tylko górny trójkąt
-    matrix = matrix + matrix.T - np.diag(matrix.diagonal())  # tworzymy symetrię
-    np.fill_diagonal(matrix, 0)
-    return matrix
 
 def read_points_and_matrix(filename: str):
     with open(filename, 'r') as file:
@@ -29,6 +23,7 @@ def read_points_and_matrix(filename: str):
 
     return points, matrix
 
+
 def read_relations(filename: str):
     with open(filename, 'r') as file:
         lines = file.readlines()
@@ -49,6 +44,7 @@ def read_relations(filename: str):
 
     return people, relations
 
+
 def generate_points_and_matrix(num_points):
     points = []
     for _ in range(num_points):
@@ -56,9 +52,9 @@ def generate_points_and_matrix(num_points):
         y = round(random.uniform(0, 100), 2)
         points.append((x, y))
 
-    matrix = np.random.randint(1, 11, size=(num_points, num_points))
-    matrix = np.triu(matrix)  # zachowujemy tylko górny trójkąt
-    matrix = matrix + matrix.T - np.diag(matrix.diagonal())  # tworzymy symetrię
+    matrix = np.random.randint(0, 11, size=(num_points, num_points))
+    matrix = np.triu(matrix)  # gorny trojkat
+    matrix = matrix + matrix.T - np.diag(matrix.diagonal())  # symetria
     np.fill_diagonal(matrix, 0)
 
     return points, matrix
