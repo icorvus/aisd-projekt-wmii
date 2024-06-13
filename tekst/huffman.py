@@ -25,6 +25,9 @@ def encode(infile, verbose, outfile, json_outfile):
         string = f.read()
         string_fixed = replacePattern(string, 'poli', 'boli')
         string_fixed = replacePattern(string_fixed, '\n', ' ').strip()
+        if not string_fixed:
+            print("File has no contents or consists of illegal signs")
+            quit()
 
     freq = Counter(string_fixed)
     freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)
@@ -87,7 +90,6 @@ def decode(code, json_in):
     out = ""
     with open(json_in, "r") as f:
         d.update(json.load(f))
-    print(d)
 
     with open(code, "r") as f:
         words = f.read().strip().split()
