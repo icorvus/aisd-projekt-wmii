@@ -4,13 +4,11 @@ import networkx as nx
 
 class Graph:
     def __init__(self, vertices):
-        # graph initialization
         self.V = vertices
         self.graph = defaultdict(list)
         self.capacity = {}
 
     def add_edge(self, u, v, cap):
-        # adding edges
         self.graph[u].append(v)
         self.graph[v].append(u)
         self.capacity[(u, v)] = cap
@@ -61,7 +59,6 @@ def build_graph(people, relations):
     front_ids = []
     back_ids = []
 
-    # adding edges from the source to people with hands in front and from people with hands behind to the sink
     for i, person in enumerate(people):
         if person['hands'] == 'front':
             front_ids.append(i)
@@ -70,7 +67,6 @@ def build_graph(people, relations):
             back_ids.append(i)
             g.add_edge(i, sink, 1)
 
-    # adding edges between people based on relationships
     for u, v in relations:
         if people[u]['hands'] == 'front' and people[v]['hands'] == 'back':
             g.add_edge(u, v, 1)
@@ -80,11 +76,34 @@ def build_graph(people, relations):
     return g, source, sink, front_ids, back_ids
 
 
+def draw_graph(people, relations, front_ids, back_ids):
+    B = nx.Graph()
+    B.add_nodes_from(front_ids, bipartite=0, color='red')
+    B.add_nodes_from(back_ids, bipartite=1, color='blue')
+
+    for u, v in relations:
+        if people[u]['hands'] == 'front' and people[v]['hands'] == 'back':
+            B.add_edge(u, v)
+        elif people[u]['hands'] == 'back' and people[v]['hands'] == 'front':
+            B.add_edge(v, u)
+
+    pos = {}
+    pos.update((node, (1, index)) for index, node in enumerate(front_ids))
+    pos.update((node, (2, index)) for index, node in enumerate(back_ids))
+
+    color_map = ['red' if node in front_ids else 'blue' for node in B]
+
+    plt.figure(figsize=(10, 6))
+    nx.draw(B, pos, node_color=color_map, with_labels=True, node_size=500, font_color='white')
+    plt.title('Bipartite Graph')
+    plt.show()
+
+
 def read_input():
     n = int(input("Enter the number of porters: "))
     people = []
     for i in range(n):
-        hands = input(f"Person {i} (front/back): ")
+        hands = input(f"Porter {i} (front/back): ")
         people.append({'id': i, 'hands': hands})
 
     relations = []
@@ -97,30 +116,3 @@ def read_input():
         relations.append((u, v))
 
     return people, relations
-
-
-def draw_graph(people, relations, front_ids, back_ids):
-    B = nx.Graph()
-
-    # add nodes with the bipartite attribute
-    B.add_nodes_from(front_ids, bipartite=0, color='red')
-    B.add_nodes_from(back_ids, bipartite=1, color='blue')
-
-    # add edges
-    for u, v in relations:
-        if people[u]['hands'] == 'front' and people[v]['hands'] == 'back':
-            B.add_edge(u, v)
-        elif people[u]['hands'] == 'back' and people[v]['hands'] == 'front':
-            B.add_edge(v, u)
-
-    # position nodes using bipartite_layout
-    pos = {}
-    pos.update((node, (1, index)) for index, node in enumerate(front_ids))
-    pos.update((node, (2, index)) for index, node in enumerate(back_ids))
-
-    color_map = ['red' if node in front_ids else 'blue' for node in B]
-
-    plt.figure(figsize=(10, 6))
-    nx.draw(B, pos, node_color=color_map, with_labels=True, node_size=500, font_color='white')
-    plt.title('Bipartite Graph')
-    plt.show()

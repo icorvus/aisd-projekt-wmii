@@ -1,46 +1,57 @@
+import sys
 import numpy as np
-from relations import read_input, build_graph, draw_graph
+
+from point import LandPoint
+from relations import build_graph, draw_graph, read_input
 from world import WorldGenerator, WorldVisualizer, World
 from hull import ConvexHullSearcher
 from max_flow import EdmondsKarp
-from utils import create_random_matrix_for_flow
-
+from utils import read_relations, read_points_and_matrix, create_random_matrix_for_flow, generate_points_and_matrix
 
 def print_matrix(matrix: np.ndarray):
     for row in matrix:
         print(", ".join(f"{val:2d}" for val in row))
 
-
 def main():
-    width = 50
-    height = 50
-    number_of_points = 10
-    world_generator = WorldGenerator(width=width, height=height)
-    world = world_generator.generate_world(number_of_points=number_of_points)
+    if len(sys.argv) == 3:
+        points_and_matrix_file = sys.argv[1]
+        relations_file = sys.argv[2]
+
+        # Reading points and matrix from file
+        points, matrix = read_points_and_matrix(points_and_matrix_file)
+
+        # Reading relations from file
+        people, relations = read_relations(relations_file)
+
+    else:
+        # Generate random points and matrix
+        num_points = 10
+        points, matrix = generate_points_and_matrix(num_points)
+
+        # Manually input relations
+        people, relations = read_input()
+
+    # Generate world and plot points
+    world = World(width=50, height=50, land_points=[LandPoint(x, y) for x, y in points])
     WorldVisualizer.plot_world(world)
     world.fence_points = ConvexHullSearcher(world.land_points).find_convex_hull()
     WorldVisualizer.plot_fence(world)
 
-
-    points_on_fence, points_inside_fence = world.count_points()
-    total_points = points_on_fence + points_inside_fence
-    print(f"Points on fence: {points_on_fence}, Points inside fence: {points_inside_fence}")
-    print(f"Total points: {total_points}")
-    matrix = create_random_matrix_for_flow(total_points)
+    # Print matrix
+    print("Matrix:")
     print_matrix(matrix)
-    # print("Random matrix:\n", matrix)
+
+    # Max flow calculation
     ek = EdmondsKarp(matrix)
-    source, sink = 0, total_points - 1
+    source, sink = 0, len(matrix) - 1
     max_flow = ek.edmonds_karp(source, sink)
     print(f"Max flow from {source} to {sink}: {max_flow}")
 
-
-    people, relations = read_input()
+    # Graph relations
     g, source, sink, front_ids, back_ids = build_graph(people, relations)
     max_matching = g.edmonds_karp_relations(source, sink)
     print(f'Max association: {max_matching}')
     draw_graph(people, relations, front_ids, back_ids)
-
 
 if __name__ == "__main__":
     main()
