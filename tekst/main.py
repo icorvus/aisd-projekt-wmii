@@ -1,32 +1,12 @@
 import json
 import sys
-import argparse
 import string
 
-parser = argparse.ArgumentParser(
-        prog = "Problem 2.",
-        description = "Rozwiązanie problemu 2. w języku Python"
-        )
-
-verbose = False
-
-parser.add_argument('-i', '--infile', help="file to read from").default = "infile.txt"
-parser.add_argument('-o', '--outfile', help="file to write to").default = "outfile.txt"
-parser.add_argument('-v', '--verbose', help="increase output verbosity", action="store_true")
-
-args = parser.parse_args()
-if args.verbose:
-    verbose = True
+from parser import args
+from swap import swap_words
+from huffman import HuffmanTree
 
 filename = args.infile
-
-def swap_words(text):
-    # to nie dziala, trzeba poprawic
-    swap_candidates = {"poli": "boli", "\n": " "}
-    # zamiana wystapien ze slownika
-    for key in swap_candidates.keys():
-        text_fixed = text.strip().replace(key, swap_candidates[key])
-    return text_fixed
 
 with open(filename) as f:
     string = f.read()
@@ -47,15 +27,6 @@ class NodeTree(object):
     def __str__(self):
         return '%s_%s' % (self.left, self.right)
 
-def huffman_tree(node, left=True, binString=''):
-    if type(node) is str:
-        return {node: binString}
-    (l, r) = node.children()
-    d = dict()
-    d.update(huffman_tree(l, True, binString + '0'))
-    d.update(huffman_tree(r, False, binString + '1'))
-    return d
-
 freq = {}
 for c in string_fixed:
     if c in freq:
@@ -75,35 +46,37 @@ while len(nodes) > 1:
     nodes.append((node, c1 + c2))
     nodes = sorted(nodes, key=lambda x: x[1], reverse=True)
 
-huffman_code = huffman_tree(nodes[0][0])
+huffman_code = HuffmanTree(nodes[0][0])
 
-print("Na podstawie pliku \"" + filename + "\" (" + str(len(string_fixed)) + " znaków):")
-print(' Znak | Odpowiednik w sensie Huffmana ')
-print('-' * 38)
-for (char, frequency) in freq:
-    print(' %-4r |%20s' % (char, huffman_code[char]))
-
-print()
-print(string)
-print()
 out = ''.join(f"{huffman_code[char]}" for char in string_fixed)
-print()
-print(out)
-print()
 out_separated = ' '.join(f"{huffman_code[char]}" for char in string_fixed)
-print(out_separated)
-print()
 
-print("Koszta zapisów:")
-print('pięciobitowego | kodem zmiennej dł.')
-print('-' * 35)
-print('%-14r | %9s' % (len(string_fixed) * 5, len(out)))
+if args.verbose:
+    print("Zawartość pliku \"" + filename + "\" (" + str(len(string_fixed)) + " znaków):")
+    print(' Znak | Odpowiednik w sensie Huffmana ')
+    print('-' * 38)
+    for (char, frequency) in freq:
+        print(' %-4r |%20s' % (char, huffman_code[char]))
+
+    print()
+    print(string)
+    print()
+    print()
+    print(out)
+    print()
+    print(out_separated)
+    print()
+
+    print("Koszta zapisów:")
+    print('pięciobitowego | kodem zmiennej dł.')
+    print('-' * 35)
+    print('%-14r | %9s' % (len(string_fixed) * 5, len(out)))
 
 with open(args.outfile, "w") as out:
     out.write(out_separated)
 
-with open("huffman.json", "w") as json_out:
-    json.dump(huffman_code, json_out, indent = 2)
+# with open("huffman.json", "w") as json_out:
+#     json.dump(huffman_code, json_out, indent = 2)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
