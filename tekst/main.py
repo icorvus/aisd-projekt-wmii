@@ -22,10 +22,10 @@ def main():
     if args.verbose:
         verbose = True
 
-    action = int(input("Wybierz działanie: "))
     print("1. Zakoduj")
     print("2. Dekoduj")
     print("3. Wyjdź")
+    action = int(input("Wybierz działanie: "))
     match action:
         case 1:
             encode(infile, verbose, outfile, json)
