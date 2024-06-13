@@ -5,6 +5,7 @@ import string
 from parser import args
 from swap import swap_words
 from huffman import HuffmanTree
+from nodetree import NodeTree
 
 filename = args.infile
 
@@ -12,20 +13,6 @@ with open(filename) as f:
     string = f.read()
     string_fixed = swap_words(string)
 
-class NodeTree(object):
-
-    def __init__(self, left=None, right=None):
-        self.left = left
-        self.right = right
-
-    def children(self):
-        return (self.left, self.right)
-
-    def nodes(self):
-        return (self.left, self.right)
-
-    def __str__(self):
-        return '%s_%s' % (self.left, self.right)
 
 freq = {}
 for c in string_fixed:
