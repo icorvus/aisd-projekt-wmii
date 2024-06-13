@@ -9,7 +9,8 @@ parser = argparse.ArgumentParser(
 verbose = False
 
 parser.add_argument('-i', '--infile', help="file to read from").default = "infile.txt"
-parser.add_argument('-o', '--outfile', help="file to write to").default = "outfile.txt"
+parser.add_argument('-o', '--outfile', help="file to write to").default = "out/outfile.txt"
+parser.add_argument('-j', '--json', help="file to write the mappings to").default = "out/mappings.json"
 parser.add_argument('-v', '--verbose', help="increase output verbosity", action="store_true")
 
 args = parser.parse_args()

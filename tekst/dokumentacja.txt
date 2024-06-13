@@ -21,4 +21,7 @@ Program domyślnie zczytuje z pliku "infile.txt", zaś zapisuje do pliku "outfil
 Użytkownik może przy uruchomieniu nadpisać te ścieżki, za pomocą argumentów "-i" oraz "-o".
 Więcej informacji na ten temat dostarczy podanie argumentu "-h".
 
+## Interpretacja
 
+Plik (w tym wypadku piosenka) jest na tyle mały, że do podmiany wzorca (zamiany dźwięków
+poli na boli) wystarczy algorytm zachłanny

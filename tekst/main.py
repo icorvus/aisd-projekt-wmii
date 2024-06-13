@@ -1,69 +1,90 @@
 import json
 import sys
 import string
+import os
 
 from parser import args
 from swap import swap_words
 from huffman import HuffmanTree
 from nodetree import NodeTree
 
-filename = args.infile
+def main():
+    if not os.path.exists("out"):
+        os.makedirs("out")
 
-with open(filename) as f:
-    string = f.read()
-    string_fixed = swap_words(string)
+    infile = args.infile
+    outfile = args.outfile
+    json_outfile = args.json
+
+    string = ""
+    string_fixed = ""
+    with open(infile) as f:
+        string = f.read()
+        string_fixed = swap_words(string)
 
 
-freq = {}
-for c in string_fixed:
-    if c in freq:
-        freq[c] += 1
-    else:
-        freq[c] = 1
+    freq = {}
+    for c in string_fixed:
+        if c in freq:
+            freq[c] += 1
+        else:
+            freq[c] = 1
 
-freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)
+    freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)
 
-nodes = freq
+    nodes = freq
 
-while len(nodes) > 1:
-    (key1, c1) = nodes[-1]
-    (key2, c2) = nodes[-2]
-    nodes = nodes[:-2]
-    node = NodeTree(key1, key2)
-    nodes.append((node, c1 + c2))
-    nodes = sorted(nodes, key=lambda x: x[1], reverse=True)
+    while len(nodes) > 1:
+        (key1, c1) = nodes[-1]
+        (key2, c2) = nodes[-2]
+        nodes = nodes[:-2]
+        node = NodeTree(key1, key2)
+        nodes.append((node, c1 + c2))
+        nodes = sorted(nodes, key=lambda x: x[1], reverse=True)
 
-huffman_code = HuffmanTree(nodes[0][0])
+    huffman_code = HuffmanTree(nodes[0][0])
 
-out = ''.join(f"{huffman_code[char]}" for char in string_fixed)
-out_separated = ' '.join(f"{huffman_code[char]}" for char in string_fixed)
+    out = ''.join(f"{huffman_code[char]}" for char in string_fixed)
+    out_separated = ' '.join(f"{huffman_code[char]}" for char in string_fixed)
 
-if args.verbose:
-    print("Zawartość pliku \"" + filename + "\" (" + str(len(string_fixed)) + " znaków):")
-    print(' Znak | Odpowiednik w sensie Huffmana ')
-    print('-' * 38)
-    for (char, frequency) in freq:
-        print(' %-4r |%20s' % (char, huffman_code[char]))
+    if args.verbose:
+        print("ANALIZA PLIKU \"" + infile + "\" (" + str(len(string_fixed)) + " ZNAKÓW):")
+        print()
 
-    print()
-    print(string)
-    print()
-    print()
-    print(out)
-    print()
-    print(out_separated)
-    print()
+        print(' Znak | Odpowiednik w sensie Huffmana ')
+        print('-' * 38)
+        for (char, frequency) in freq:
+            print(' %-4r |%20s' % (char, huffman_code[char]))
+        print()
 
-    print("Koszta zapisów:")
-    print('pięciobitowego | kodem zmiennej dł.')
-    print('-' * 35)
-    print('%-14r | %9s' % (len(string_fixed) * 5, len(out)))
+        print("ZAWARTOŚĆ \"" + infile + "\":")
+        print()
+        print(string.strip())
+        print()
+        print("PLIK ZAKODOWANY:")
+        print()
+        print(out)
+        print()
+        print("PLIK ZAKODOWANY (ze spacjami):")
+        print(out_separated)
+        print()
 
-with open(args.outfile, "w") as out:
-    out.write(out_separated)
+        print("BITÓW POTRZEBNYCH DO ZAPISU:")
+        print('pięciobitowego | kodem zmiennej dł.')
+        print('-' * 35)
+        print('%-14r | %9s' % (len(string_fixed) * 5, len(out)))
 
-# with open("huffman.json", "w") as json_out:
-#     json.dump(huffman_code, json_out, indent = 2)
+    with open(outfile, "w") as out:
+        out.write(out_separated)
+    print("Zapisano wyjście do pliku \"" + outfile + "\".")
 
-# if __name__ == "__main__":
-#     main()
+    with open(json_outfile, "w") as json_output:
+        # json.dump(huffman_code, json_out, indent = 2)
+        huffman_code_inverted = {v: k for k, v in huffman_code.items()}
+        huffman_sum = dict(huffman_code)
+        huffman_sum.update(huffman_code_inverted)
+        json.dump(huffman_sum, json_output, indent = 2)
+    print("Zapisano słownik do pliku \"" + json_outfile + "\".")
+
+if __name__ == "__main__":
+    main()
