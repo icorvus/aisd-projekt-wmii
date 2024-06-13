@@ -2,9 +2,10 @@ import json
 import sys
 import string
 import os
+from collections import Counter
 
 from parser import args
-from swap import swap_words
+from kmp import replacePattern
 from huffman import HuffmanTree
 from nodetree import NodeTree
 
@@ -16,22 +17,20 @@ def main():
     outfile = args.outfile
     json_outfile = args.json
 
+    if not os.path.exists(args.infile):
+        print("Error: specified input file does not exist.")
+        return
+
     string = ""
     string_fixed = ""
     with open(infile) as f:
         string = f.read()
-        string_fixed = swap_words(string)
+        string_fixed = replacePattern(string, 'poli', 'boli')
+        string_fixed = replacePattern(string_fixed, '\n', ' ').strip()
 
-
-    freq = {}
-    for c in string_fixed:
-        if c in freq:
-            freq[c] += 1
-        else:
-            freq[c] = 1
-
+    freq = Counter(string_fixed)
     freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)
-
+    print(freq)
     nodes = freq
 
     while len(nodes) > 1:
@@ -58,11 +57,12 @@ def main():
         print()
 
         print("ZAWARTOŚĆ \"" + infile + "\":")
-        print()
         print(string.strip())
         print()
-        print("PLIK ZAKODOWANY:")
+        print("PLIK Z PODMIENIONĄ MELODIĄ:")
+        print(string_fixed)
         print()
+        print("PLIK ZAKODOWANY:")
         print(out)
         print()
         print("PLIK ZAKODOWANY (ze spacjami):")
@@ -74,15 +74,13 @@ def main():
         print('-' * 35)
         print('%-14r | %9s' % (len(string_fixed) * 5, len(out)))
 
-    with open(outfile, "w") as out:
-        out.write(out_separated)
+    with open(outfile, "w") as output:
+        output.write(out)
     print("Zapisano wyjście do pliku \"" + outfile + "\".")
-
+    
     with open(json_outfile, "w") as json_output:
-        # json.dump(huffman_code, json_out, indent = 2)
-        huffman_code_inverted = {v: k for k, v in huffman_code.items()}
         huffman_sum = dict(huffman_code)
-        huffman_sum.update(huffman_code_inverted)
+        huffman_sum.update({v: k for k, v in huffman_code.items()})
         json.dump(huffman_sum, json_output, indent = 2)
     print("Zapisano słownik do pliku \"" + json_outfile + "\".")
 
