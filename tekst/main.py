@@ -1,28 +1,40 @@
-# konwertuje znaki na odpowiedniki w kodzie
-def convert(character):
-    if character == "," or character == ";":
-        return "11010"
-    if character == " ":
-        return "11101"
-    else:
-        return format(ord(letter) - 97, "b").rjust(5, "0")
+import json
+import sys
+import string
+import os
+from collections import Counter
 
+from parser import args
+from huffman import huffmanTree, encode, decode
 
-def swap_words(text):
-    # co nalezy zmienic na co
-    # jesli bedzie potrzeba zmienic cos jeszcze, dodajemy to tutaj
-    swap_candidates = {"poli": "boli"}
+def main():
+    if not os.path.exists("out"):
+        os.makedirs("out")
 
-    # zamiana wystapien ze slownika
-    for cos, costam in swap_candidates.items():
-        text = text.replace(cos, costam)
-    return text
+    infile = args.infile
+    outfile = args.outfile
+    json = args.json
 
+    if not os.path.exists(args.infile):
+        print("Error: specified input file does not exist.")
+        return
 
-with open("2.txt", "r") as file:
-    text = file.read()
-    text = text.replace("\n", " ")
-    text = swap_words(text)
+    if args.verbose:
+        verbose = True
 
-    for letter in text:
-        print(letter + " --> " + convert(letter))
+    print("1. Zakoduj")
+    print("2. Dekoduj")
+    print("3. Wyjdź")
+    action = int(input("Wybierz działanie: "))
+    match action:
+        case 1:
+            encode(infile, verbose, outfile, json)
+        case 2:
+            decode(infile, json)
+        case 3:
+            quit()
+        case _:
+            print("Nie rozpoznano działania")
+
+if __name__ == "__main__":
+    main()
