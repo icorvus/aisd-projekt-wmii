@@ -1,6 +1,9 @@
 matplotlib==3.8.4
 networkx==3.3
 
+# test
+pytest==8.2.2
+pytest-html==4.1.1
+
 # lint
-flake8==7.0.0
-black==24.4.0
+ruff==0.4.8
