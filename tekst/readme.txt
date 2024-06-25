@@ -3,9 +3,9 @@
 ## Zastosowane algorytmy:
 
 - Algorytm Huffmana:
-   - złożoność (odpowiednio: budowa drzewa, kodowanie, dekodowanie):
-      - czasowa: O(NlogN), O(N), O(N)
-      - pamięciowa: O(N), O(1), O(1)
+   - złożoność (odpowiednio: budowa drzewa, kodowanie):
+      - czasowa: O(NlogN), O(N)
+      - pamięciowa: O(N), O(1)
 - Algorytm KMP:
    - złożoność (utworzenie tablicy prefiksów, zastępowanie wzorca)
       - czasowa: O(m), O(n + m)
